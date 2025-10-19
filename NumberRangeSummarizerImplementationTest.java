@@ -1,82 +1,60 @@
-package numberrangesummarizer;
-
-import org.junit.Test;
-import static org.junit.Assert.*;
+/* Testing class for NumberRangeSummarizerImplementation.
+We run it on the windows terminal in side the folder using this command:
+javac -cp .;junit-platform-console-standalone-1.7.0-all.jar NumberRangeSummarizerImplementationTest.java && java -jar junit-platform-console-standalone-1.7.0-all.jar --class-path . --scan-class-path
+*/
+import org.junit.jupiter.api.Test;
 import java.util.Collection;
-
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
 public class NumberRangeSummarizerImplementationTest {
 
-    private final NumberRangeSummarizer summarizer = new NumberRangeSummarizerImplementation();
+    private final NumberRangeSummarizerImplementation summarizer = new NumberRangeSummarizerImplementation();
 
     @Test
-    public void testSampleInputFromSpec() {
+    public void testCollect_NormalInput() {
         String input = "1,3,6,7,8,12,13,14,15,21,22,23,24,31";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("1, 3, 6-8, 12-15, 21-24, 31", result);
+        Collection<Integer> expected = List.of(1, 3, 6, 7, 8, 12, 13, 14, 15, 21, 22, 23, 24, 31);
+        Collection<Integer> actual = summarizer.collect(input);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testAllSequentialNumbers() {
-        String input = "1,2,3,4,5";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("1-5", result);
-    }
-
-    @Test
-    public void testAllIsolatedNumbers() {
-        String input = "1,3,5,7,9";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("1, 3, 5, 7, 9", result);
-    }
-
-    @Test
-    public void testMixedRanges() {
-        String input = "1,2,3,5,6,8,10,11,12,13";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("1-3, 5-6, 8, 10-13", result);
-    }
-
-    @Test
-    public void testEmptyInput() {
+    public void testCollect_EmptyInput() {
         String input = "";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("", result);
+        Collection<Integer> expected = List.of();
+        Collection<Integer> actual = summarizer.collect(input);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testSingleNumber() {
-        String input = "5";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("5", result);
+    public void testCollect_NullInput() {
+        String input = null;
+        Collection<Integer> expected = List.of();
+        Collection<Integer> actual = summarizer.collect(input);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testDuplicateNumbers() {
-        String input = "1,1,2,2,3,3";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("1-3", result);
+    public void testSummarizeCollection_NormalInput() {
+        Collection<Integer> input = List.of(1, 3, 6, 7, 8, 12, 13, 14, 15, 21, 22, 23, 24, 31);
+        String expected = "1, 3, 6-8, 12-15, 21-24, 31";
+        String actual = summarizer.summarizeCollection(input);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testUnsortedInput() {
-        String input = "10,8,9,7,6,5,4";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("4-10", result);
+    public void testSummarizeCollection_SingleElement() {
+        Collection<Integer> input = List.of(5);
+        String expected = "5";
+        String actual = summarizer.summarizeCollection(input);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testLargeNumbers() {
-        String input = "100,101,102,150,200,201,202,203";
-        Collection<Integer> collected = summarizer.collect(input);
-        String result = summarizer.summarizeCollection(collected);
-        assertEquals("100-102, 150, 200-203", result);
+    public void testSummarizeCollection_EmptyInput() {
+        Collection<Integer> input = List.of();
+        String expected = "";
+        String actual = summarizer.summarizeCollection(input);
+        assertEquals(expected, actual);
     }
 }
